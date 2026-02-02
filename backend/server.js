@@ -13,24 +13,36 @@ const {
 
 let pool;
 
-async function initDb() {
-  pool = await mysql.createPool({
-    host: DB_HOST,
-    user: DB_USER,
-    password: DB_PASSWORD,
-    database: DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 10,
-  });
+async function waitForDb(retries = 10) {
+  while (retries > 0) {
+    try {
+      pool = await mysql.createPool({
+        host: DB_HOST,
+        user: DB_USER,
+        password: DB_PASSWORD,
+        database: DB_NAME,
+        port: Number(process.env.DB_PORT || 3306),
+      });
 
-  // tabela na start (mega proste)
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS messages (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      content VARCHAR(255) NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-  `);
+      await pool.query("SELECT 1");
+
+      await pool.query(`
+        CREATE TABLE IF NOT EXISTS messages (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          content VARCHAR(255) NOT NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+
+      console.log("DB ready");
+      return;
+    } catch (err) {
+      console.log("Waiting for DB...", err.code);
+      retries--;
+      await new Promise(r => setTimeout(r, 2000));
+    }
+  }
+  throw new Error("DB not ready after retries");
 }
 
 app.get("/api/health", (req, res) => {
@@ -49,11 +61,11 @@ app.post("/api/messages", async (req, res) => {
   res.json({ ok: true });
 });
 
-initDb()
+waitForDb()
   .then(() => {
     app.listen(3000, () => console.log("Backend listening on :3000"));
   })
-  .catch((err) => {
-    console.error("DB init error:", err);
+  .catch(err => {
+    console.error(err);
     process.exit(1);
   });
