@@ -57,6 +57,9 @@ db_data
 ```bash
 wsl.exe -d Ubuntu 
 docker compose up --build
+
+docker compose down
+docker compose down -v
 ```
 ### Results
 
