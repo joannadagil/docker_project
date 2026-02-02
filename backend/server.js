@@ -6,9 +6,9 @@ app.use(express.json());
 
 const {
   DB_HOST = "db",
-  DB_USER = "appuser",
-  DB_PASSWORD = "apppass",
-  DB_NAME = "appdb",
+  DB_USER = "app_user",
+  DB_PASSWORD = "app_pass",
+  DB_NAME = "app_db",
 } = process.env;
 
 let pool;
