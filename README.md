@@ -32,10 +32,33 @@ db_data - persistent storage for MySQL data.
 
 ## Running the project
 
+### .env file
+
+```bash
+MYSQL_ROOT_PASSWORD=
+MYSQL_DATABASE=app_db
+MYSQL_USER=app_user
+MYSQL_PASSWORD=app_pass
+
+DB_HOST=db
+DB_PORT=3306
+```
+
+### .gitignore file
+
+```bash
+.env
+node_modules
+db_data
+```
+
+### Commands
+
 ```bash
 wsl.exe -d Ubuntu 
 docker compose up --build
 ```
+### Results
 
 Page available at http://localhost:8080
 
