@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "simple-backend",
   "version": "1.0.0",
@@ -11,3 +12,18 @@
     "start": "node server.js"
   }
 }
+=======
+{
+  "name": "simple-backend",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mysql2": "^3.11.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  }
+}
+>>>>>>> 647af2f57c172eeab85121d792712fa2c9a5adc5
